@@ -1,8 +1,13 @@
-##### Three-level MA issue minimum reproducable example ------------------------
+##### Three-level MA issue minimum reproducible example ------------------------
 
-# When using the metafor package to run a three-level meta-analysis (id) and
-# sub-groups (byvar), where one sub-group included 
+# When using the meta package to run a three-level meta-analysis (id) and
+# sub-groups (byvar), where one sub-group (group C) includes multiple data  
+# points from one study (Plain 2019) using a single reference group, the 
+# following error is thrown:
 
+### Error: $ operator is invalid for atomic vectors ###
+
+library(meta)
 library(metafor)
 
 df <- data.frame(study = c("Brown 2011, exposed, males", 
