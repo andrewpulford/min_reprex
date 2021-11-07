@@ -13,7 +13,7 @@
 library(meta)
 library(metafor)
 
-## create dataframe
+## create dataframe (made-up data)
 df <- data.frame(study = c("Brown 2011, exposed, males", 
                            "Brown 2011, exposed, females",
                            "Grant 2014, exposed, both sexes",
