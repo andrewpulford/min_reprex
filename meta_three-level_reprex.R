@@ -1,15 +1,19 @@
 ##### Three-level MA issue minimum reproducible example ------------------------
 
-# When using the meta package to run a three-level meta-analysis (id) and
-# sub-groups (byvar), where one sub-group (group C) includes multiple data  
-# points from one study (Plain 2019) using a single reference group, the 
-# following error is thrown:
+# Uses the meta package to run a three-level meta-analysis (id) with
+# sub-groups (byvar)
 
+# Where one sub-group (group C) includes multiple data points from one study
+# (Plain 2019) using a single reference group  
+
+# The following error is thrown:
 ### Error: $ operator is invalid for atomic vectors ###
 
+## open packages
 library(meta)
 library(metafor)
 
+## create dataframe
 df <- data.frame(study = c("Brown 2011, exposed, males", 
                            "Brown 2011, exposed, females",
                            "Grant 2014, exposed, both sexes",
@@ -32,9 +36,7 @@ df <- data.frame(study = c("Brown 2011, exposed, males",
                  se = c(0.24, 0.16, 0.34, 0.28, 0.27,0.13, 0.18, 0.12, 0.17),
                  exposure_topic = c("A","A","B","B","B","C","C","C","C"))
 
-
-
-
+## planned three-level MA ----------
 ma <- metagen(TE = te, seTE = se, sm = paste("OR"), 
                   studlab = paste(study), 
                   data = df,
@@ -43,8 +45,37 @@ ma <- metagen(TE = te, seTE = se, sm = paste("OR"),
                   id = ref_group,
                   fixed = FALSE, random = TRUE)
 
-
 #produce forest plot
 forest(x = ma, 
        leftcols = "studlab", overall = TRUE,
        subgroup = TRUE, print.subgroup.labels = TRUE, study.results = TRUE)
+
+## three-level MA without sub-groups  ----------
+ma2 <- metagen(TE = te, seTE = se, sm = paste("OR"), 
+              studlab = paste(study), 
+              data = df,
+              id = ref_group,
+              fixed = FALSE, random = TRUE)
+
+#produce forest plot
+forest(x = ma2, 
+       leftcols = "studlab", overall = TRUE,
+       subgroup = TRUE, print.subgroup.labels = TRUE, study.results = TRUE)
+
+## three-level MA excluding Plain 2019  ----------
+
+df_sub <- subset(df, df$exposure_topic!="C")
+
+ma3 <- metagen(TE = te, seTE = se, sm = paste("OR"), 
+              studlab = paste(study), 
+              data = df_sub,
+              subgroup = exposure_topic, 
+              subgroup.name = "Exposure topic",
+              id = ref_group,
+              fixed = FALSE, random = TRUE)
+
+#produce forest plot
+forest(x = ma3, 
+       leftcols = "studlab", overall = TRUE,
+       subgroup = TRUE, print.subgroup.labels = TRUE, study.results = TRUE)
+
